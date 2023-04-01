@@ -1,0 +1,17 @@
+data_dir = ./preprocessed_data
+log_dir = ./logs/istanbul_vivit
+
+city = ISTANBUL
+region = DT
+t_subsample = 1
+crop_size = 32
+
+model = ViViT
+batch_size = 64
+lr = 0.005
+epochs = 5000
+
+num_layers = 8
+num_heads = 4
+dim_hidden = 192
+patch_size = 16

@@ -1,0 +1,11 @@
+name: gct
+channels:
+  - defaults
+dependencies:
+  - python=3.7
+  - cudatoolkit=11.1
+  - pytorch
+  - torchaudio
+  - torchvision
+  - pytorch-geometric
+prefix: /ssd1/peihao/miniconda3/envs/gct

@@ -1,0 +1,12 @@
+data_dir = ./preprocessed_data
+log_dir = ./logs/istanbul_unet3d
+
+city = ISTANBUL
+region = DT
+t_subsample = 1
+crop_size = 32
+
+model = UNet3D
+batch_size = 64
+lr = 0.005
+epochs = 500

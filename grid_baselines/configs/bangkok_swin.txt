@@ -1,0 +1,18 @@
+data_dir = ./preprocessed_data
+log_dir = ./logs/bangkok_swin
+
+city = BANGKOK
+region = DT
+t_subsample = 1
+crop_size = 32
+
+model = Swin
+batch_size = 64
+lr = 0.005
+epochs = 500
+
+num_layers = 8
+num_heads = 4
+dim_hidden = 96
+patch_size = 4
+window_size = 8

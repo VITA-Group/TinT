@@ -1,0 +1,12 @@
+data_dir = ./preprocessed_data
+log_dir = ./logs/berlin_unetlstm_r
+
+city = BERLIN
+region = Rural
+t_subsample = 1
+crop_size = 32
+
+model = UNetLSTM
+batch_size = 64
+lr = 0.005
+epochs = 500

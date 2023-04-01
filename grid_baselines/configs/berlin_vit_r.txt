@@ -1,0 +1,17 @@
+data_dir = ./preprocessed_data
+log_dir = ./logs/berlin_vit_r
+
+city = BERLIN
+region = Rural
+t_subsample = 1
+crop_size = 32
+
+model = ViT
+batch_size = 64
+lr = 0.005
+epochs = 5000
+
+num_layers = 8
+num_heads = 3
+dim_hidden = 192
+patch_size = 16
