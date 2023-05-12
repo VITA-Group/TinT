@@ -21,7 +21,7 @@ Take the Graph modality for example. After the data is downloaded, cd into the g
 
 Then run `python train_TinT.py --config TinT_configs.conf`.
 
-
+<!-- 
 ## (Optional) Data preprocessing
 
 You can also optionally checkout [original data](https://drive.google.com/drive/folders/1u60jmadoMvDe8WZnUItFml6uQuuWK30h?usp=sharing) and process them.
@@ -43,7 +43,7 @@ Scripts for preprocessing, if downloading original data:
   python preparedata.py --config configurations/prepData_TinT_sd.conf
   python preparedata.py --config configurations/prepData_TinT_sf.conf
   python preparedata.py --config configurations/prepData_TinT_la.conf
-```
+``` -->
 
 
 
