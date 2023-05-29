@@ -1,5 +1,5 @@
 # TinT
-This repository is the official implementation for the paper "Integrating the Urban Science with Deep Leaning for City-wide Network Congestion Prediction" by Wenqing Zheng, Hao (Frank) Yang, Jiarui Cai, Peihao Wang, Xuan Jiang, Simon Du, Yinhai Wang, and Zhangyang Wang
+This repository is the official implementation for the paper "Integrating the Urban Science with Deep Learning for City-wide Network Congestion Prediction" by Wenqing Zheng, Hao (Frank) Yang, Jiarui Cai, Peihao Wang, Xuan Jiang, Simon Du, Yinhai Wang, and Zhangyang Wang, accepted by Information Fusion in 2023.
 
 
 ![](images/FIG1.png "Problem Settings")
