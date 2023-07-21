@@ -555,3 +555,107 @@ def load_graphdata_normY_channel1(graph_signal_matrix_filename, num_of_hours, nu
     return train_loader, train_target_tensor, val_loader, val_target_tensor, test_loader, test_target_tensor, _mean, _std
 
 
+
+
+def cheb_polynomial(L_tilde, K):
+    '''
+    compute a list of chebyshev polynomials from T_0 to T_{K-1}
+
+    Parameters
+    ----------
+    L_tilde: scaled Laplacian, np.ndarray, shape (N, N)
+
+    K: the maximum order of chebyshev polynomials
+
+    Returns
+    ----------
+    cheb_polynomials: list(np.ndarray), length: K, from T_0 to T_{K-1}
+
+    '''
+
+    N = L_tilde.shape[0]
+
+    cheb_polynomials = [np.identity(N), L_tilde.copy()]
+
+    for i in range(2, K):
+        cheb_polynomials.append(2 * L_tilde * cheb_polynomials[i - 1] - cheb_polynomials[i - 2])
+
+    return cheb_polynomials
+
+def scaled_Laplacian(W):
+    '''
+    compute \tilde{L}
+
+    Parameters
+    ----------
+    W: np.ndarray, shape is (N, N), N is the num of vertices
+
+    Returns
+    ----------
+    scaled_Laplacian: np.ndarray, shape (N, N)
+
+    '''
+
+    assert W.shape[0] == W.shape[1]
+
+    D = np.diag(np.sum(W, axis=1))
+
+    L = D - W
+
+    lambda_max = eigs(L, k=1, which='LR')[0].real
+
+    return (2 * L) / lambda_max - np.identity(W.shape[0])
+
+
+def evaluate_on_test_mstgcn(net, test_loader, test_target_tensor, sw, epoch, _mean, _std):
+    '''
+    for rnn, compute MAE, RMSE, MAPE scores of the prediction for every time step on testing set.
+
+    :param net: model
+    :param test_loader: torch.utils.data.utils.DataLoader
+    :param test_target_tensor: torch.tensor (B, N_nodes, T_output, out_feature)=(B, N_nodes, T_output, 1)
+    :param sw:
+    :param epoch: int, current epoch
+    :param _mean: (1, 1, 3(features), 1)
+    :param _std: (1, 1, 3(features), 1)
+    '''
+
+    net.train(False)  # ensure dropout layers are in test mode
+
+    with torch.no_grad():
+
+        test_loader_length = len(test_loader)
+
+        test_target_tensor = test_target_tensor.cpu().numpy()
+
+        prediction = []  # 存储所有batch的output
+
+        for batch_index, batch_data in enumerate(test_loader):
+
+            encoder_inputs, labels = batch_data
+
+            outputs = net(encoder_inputs)
+
+            prediction.append(outputs.detach().cpu().numpy())
+
+            if batch_index % 100 == 0:
+                print('predicting testing set batch %s / %s' % (batch_index + 1, test_loader_length))
+
+        prediction = np.concatenate(prediction, 0)  # (batch, T', 1)
+        prediction_length = prediction.shape[2]
+
+        for i in range(prediction_length):
+            assert test_target_tensor.shape[0] == prediction.shape[0]
+            print('current epoch: %s, predict %s points' % (epoch, i))
+            mae = mean_absolute_error(test_target_tensor[:, :, i], prediction[:, :, i])
+            rmse = mean_squared_error(test_target_tensor[:, :, i], prediction[:, :, i]) ** 0.5
+            mape = masked_mape_np(test_target_tensor[:, :, i], prediction[:, :, i], 0)
+            print('MAE: %.2f' % (mae))
+            print('RMSE: %.2f' % (rmse))
+            print('MAPE: %.2f' % (mape))
+            print()
+            if sw:
+                sw.add_scalar('MAE_%s_points' % (i), mae, epoch)
+                sw.add_scalar('RMSE_%s_points' % (i), rmse, epoch)
+                sw.add_scalar('MAPE_%s_points' % (i), mape, epoch)
+
